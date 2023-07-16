@@ -82,7 +82,9 @@ def main():
         #tqdm是一个进度条显示器，可以在终端打印出现在的训练进度
         train_bar = tqdm(train_loader, file=sys.stdout, ncols=100)
         for data in train_bar:
-            images, labels = data 
+            images, labels = data
+            # print(images.shape)
+            # print(labels)
             sample_num += images.shape[0] #[64, 3, 224, 224]
             optimizer.zero_grad()
             outputs = net(images.to(device)) #output_shape: [batch_size, num_classes]
@@ -93,10 +95,11 @@ def main():
             loss.backward() #自动求导
             optimizer.step() #梯度下降
 
-            #print statistics
-            train_acc = acc_num.item() / sample_num 
             #.desc是进度条tqdm中的成员变量，作用是描述信息
             train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,  epochs, loss)
+
+        # print statistics
+        train_acc = acc_num.item() / sample_num
 
         # validate
         net.eval()

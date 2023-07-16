@@ -30,12 +30,18 @@ class BasicBlock(nn.Module):
             identity = self.downsample(x)
 
         #第一层计算
+        # print('first_input_size:', x.shape)
+        # print('first_weight_size:', self.conv1.weight.shape)
         out = self.conv1(x) #卷积操作
+        #print('first_out_size:', out.shape)
         out = self.bn1(out) #批归一化操作
         out = self.relu(out) #激活操作
 
         #第二层
+        # print('second_input_size:', out.shape)
+        # print('second_weight_size:', self.conv2.weight.shape)
         out = self.conv2(out)
+        #print('second_out_size:', out.shape)
         out = self.bn2(out)
 
         #残差连接
@@ -131,7 +137,7 @@ class ResNet(nn.Module):
         self.groups = groups
         self.width_per_group = width_per_group
 
-        #首部处理，减小输入特征尺寸
+        #首部处理，减小输入特征尺寸，通道扩展到64
         self.conv1 = nn.Conv2d(3, self.in_channel, kernel_size=7, stride=2,  padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(self.in_channel)
         self.relu = nn.ReLU(inplace=True) #inplace表示是否将原来值直接替换为激活后的值（不用中间变量进行存储）
@@ -192,15 +198,21 @@ class ResNet(nn.Module):
 
         #卷积层计算
         x = self.layer1(x)
+        #print('*'*50)
         x = self.layer2(x)
+        #print('*' * 50)
         x = self.layer3(x)
+        #print('*' * 50)
         x = self.layer4(x)
+        #print('*' * 50)
 
         #评估打分
         if self.include_top:
             x = self.avgpool(x)
+            #print(x.shape)
             x = torch.flatten(x, 1) #前1维不变，后面维度展平
             x = self.fc(x)
+            #print(x.shape)
 
         return x
 
@@ -272,3 +284,14 @@ def resnext101_32x8d(num_classes=1000, include_top=True):
                   include_top=include_top,
                   groups=groups,
                   width_per_group=width_per_group)
+
+if __name__ == '__main__':
+    imgs_1 = torch.rand((5, 3, 224, 224))
+    #print(imgs_1)
+    #imgs_2 = torch.rand((5, 1, 2, 2))
+    #print(imgs_2)
+    #imgs_s = torch.cat([imgs_1, imgs_2], dim=1)
+    # print(imgs_s.shape)
+    # print(imgs_s)
+    bc = resnet34(8)
+    bc(imgs_1)
