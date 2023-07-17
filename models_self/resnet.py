@@ -14,10 +14,12 @@ class BasicBlock(nn.Module):
     def __init__(self, in_channel, out_channel, stride=1, downsample=None, **kwargs):
         super(BasicBlock, self).__init__()
         #第一层
+        #print('创建第一层...')
         self.conv1 = nn.Conv2d(in_channels=in_channel, out_channels=out_channel, kernel_size=3, stride=stride, padding=1, bias=False) #卷积对象实例
         self.bn1 = nn.BatchNorm2d(out_channel) #批归一化实例
         self.relu = nn.ReLU() #激活实例
         #第二层
+        #print('创建第二层...')
         self.conv2 = nn.Conv2d(in_channels=out_channel, out_channels=out_channel, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(out_channel)
 
@@ -195,6 +197,7 @@ class ResNet(nn.Module):
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
+        #print(x.shape)
 
         #卷积层计算
         x = self.layer1(x)

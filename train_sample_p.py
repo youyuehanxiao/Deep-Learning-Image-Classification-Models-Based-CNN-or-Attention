@@ -8,8 +8,8 @@ import torch.optim as optim
 from tqdm import tqdm  
 #from classic_models.alexnet import AlexNet
 #from classic_models.googlenet_v1 import  GoogLeNet
-#import models_self.resnet as R
-import models_self.hetconv_resnet as R
+import models_self.resnet as R
+#import models_self.hetconv_resnet as R
 def main():
     # 判断可用设备
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
